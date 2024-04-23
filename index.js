@@ -44,10 +44,21 @@ const makeMovieList = (movies, $container) => {
     $movie.id = movie.id;
     $container.appendChild($movie);
     $movie.addEventListener('click', () => {
-      alert(`영화 id: ${movie.id}`);
+      openModal(`영화 id: ${movie.id}`);
     });
   });
 };
+const openModal = (message) => {
+  document.getElementById('modalMessage').textContent = message;
+  document.getElementById('myModal').style.display = 'block';
+};
+const closeModal = () => {
+  const modal = document.getElementById('myModal');
+  modal.style.display = 'none';
+};
+document.querySelector('.close').addEventListener('click', () => {
+  closeModal();
+});
 
 const $searchMovie = document.querySelector('.searchMovie');
 $searchMovie.addEventListener('submit', async (e) => {
@@ -77,5 +88,11 @@ window.addEventListener('load', async () => {
     renderMovieList(movieData.results);
   } catch (error) {
     console.error('에러:', error);
+  }
+});
+window.addEventListener('click', (event) => {
+  const modal = document.getElementById('myModal');
+  if (event.target === modal) {
+    closeModal();
   }
 });
