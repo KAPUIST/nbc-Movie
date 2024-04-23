@@ -1,25 +1,23 @@
-/* 전체 요소에 대한 기본 스타일 설정 */
 * {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
-  font-family: 'Roboto', sans-serif; /* 구글 폰트 Roboto 사용 */
+  font-family: 'Roboto', sans-serif;
 }
 
 body {
-  background-color: #141414; /* 넷플릭스와 유사한 어두운 배경색 */
-  color: #fff; /* 텍스트 색상을 흰색으로 설정 */
+  background-color: #141414;
+  color: #fff;
   font-size: 16px;
   line-height: 1.6;
 }
 
-/* 헤더 스타일 */
 header {
-  background-color: #000; /* 헤더 배경색을 검은색으로 설정 */
+  background-color: #000;
   padding: 15px 0;
   position: fixed;
   width: 100%;
-  z-index: 1000; /* 다른 요소들 위에 위치하도록 설정 */
+  z-index: 1000;
 }
 
 h1 {
@@ -32,14 +30,13 @@ h2 {
   text-align: center;
 }
 
-/* 검색 폼 스타일 */
 .searchMovie {
   padding: 20px;
   text-align: center;
-  display: flex; /* 검색 폼을 가운데 정렬하기 위해 flex 사용 */
-  justify-content: center; /* 가로 중앙 정렬 */
-  align-items: center; /* 세로 중앙 정렬 */
-  margin-top: 100px; /* 헤더와의 간격을 조정 */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 100px;
 }
 
 .searchMovie > input {
@@ -52,7 +49,7 @@ h2 {
 
 .searchMovie > button {
   padding: 10px 20px;
-  background-color: #e50914; /* 넷플릭스 레드 색상 */
+  background-color: #e50914;
   border: none;
   color: #fff;
   border-radius: 25px;
@@ -61,10 +58,9 @@ h2 {
 }
 
 .searchMovie > button:hover {
-  background-color: #ff0a16; /* 호버시 더 밝은 레드로 변경 */
+  background-color: #ff0a16;
 }
 
-/* 영화 리스트 스타일 */
 .movieList {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
@@ -75,13 +71,13 @@ h2 {
 .movie {
   background-color: #000;
   border-radius: 10px;
-  overflow: hidden; /* 내용이 넘칠 경우 영역 밖으로 보이지 않도록 설정 */
-  box-shadow: 0 0 10px rgba(255, 255, 255, 0.1); /* 영화 카드에 약간의 그림자 추가 */
+  overflow: hidden;
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
 }
 
 .movie:hover {
-  transform: translateY(-5px); /* 호버시 약간 위로 띄우는 효과 추가 */
-  box-shadow: 0 0 20px rgba(255, 255, 255, 0.2); /* 더 강한 그림자 추가 */
+  transform: translateY(-5px);
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
 }
 
 .movie > img {
@@ -92,11 +88,11 @@ h2 {
 .movie > p {
   margin: 10px;
 
-  color: #ccc; /* 텍스트 색상을 회색으로 설정 */
+  color: #ccc;
 }
 .rating {
-  text-align: center; /* rating 요소의 텍스트를 가운데 정렬 */
-  font-weight: bold; /* 텍스트를 굵게 표시하여 강조 */
-  font-size: 1.2em; /* 텍스트 크기를 조금 키워서 더 강조 */
-  color: #e50914; /* 넷플릭스 레드 색상으로 텍스트 색상 변경 */
+  text-align: center;
+  font-weight: bold;
+  font-size: 1.2em;
+  color: #e50914;
 }
