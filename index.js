@@ -48,17 +48,6 @@ const makeMovieList = (movies, $container) => {
     });
   });
 };
-const openModal = (message) => {
-  document.getElementById('modalMessage').textContent = message;
-  document.getElementById('myModal').style.display = 'block';
-};
-const closeModal = () => {
-  const modal = document.getElementById('myModal');
-  modal.style.display = 'none';
-};
-document.querySelector('.close').addEventListener('click', () => {
-  closeModal();
-});
 
 const $searchMovie = document.querySelector('.searchMovie');
 $searchMovie.addEventListener('submit', async (e) => {
@@ -90,6 +79,22 @@ window.addEventListener('load', async () => {
     console.error('에러:', error);
   }
 });
+//모달열기
+const openModal = (message) => {
+  document.getElementById('modalMessage').textContent = message;
+  document.getElementById('myModal').style.display = 'block';
+};
+//모달 닫기
+const closeModal = () => {
+  const modal = document.getElementById('myModal');
+  modal.style.display = 'none';
+};
+// 버튼 클릭시 모달 닫기
+document.querySelector('.close').addEventListener('click', () => {
+  closeModal();
+});
+
+// 외부 클릭시 모달 닫기
 window.addEventListener('click', (event) => {
   const modal = document.getElementById('myModal');
   if (event.target === modal) {
