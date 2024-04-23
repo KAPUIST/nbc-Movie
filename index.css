@@ -32,7 +32,6 @@ h2 {
 
 .searchMovie {
   padding: 20px;
-  text-align: center;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -40,7 +39,7 @@ h2 {
 }
 
 .searchMovie > input {
-  width: 70%;
+  width: 60%;
   padding: 10px;
   border: none;
   border-radius: 25px;
@@ -64,7 +63,7 @@ h2 {
 .movieList {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 20px;
+  gap: 40px;
   padding: 20px;
 }
 
@@ -73,10 +72,12 @@ h2 {
   border-radius: 10px;
   overflow: hidden;
   box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+  transition: transform 0.3s ease;
 }
 
 .movie:hover {
-  transform: translateY(-5px);
+  transform: translateY(-10px);
+  transition: transform 0.3s ease;
   box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
 }
 
