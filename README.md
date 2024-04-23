@@ -1,7 +1,7 @@
 # Movie Search Application
 
 이번 개인 프로젝트는 영화 검색을 위한 간단한 웹 애플리케이션입니다.
-페이지는 [여기](https://kapuist.github.io/nbc-Movie/)를 클릭하세요.
+배포 페이지는 [여기](https://kapuist.github.io/nbc-Movie/)를 클릭하세요.
 
 ## 화면 구성
 
