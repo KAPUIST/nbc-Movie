@@ -6,13 +6,18 @@ const options = {
       'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIyOWQ3YWI1OWZmZTc5YmQyODA5NTRhMjQ4M2QzOWUxZSIsInN1YiI6IjYxYWIxYjkwNmMxZTA0MDA0MmI2Yzg0NyIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ._rYfZK7OtFsmskyV66wMO10vbon3g-WxZSzZC99bEtg',
   },
 };
-
+// 페이지 상태 변수
+const moviesPerPage = 20;
+let currentPage = 1;
+let total_pages;
+// 영화 데이터 변수
 let movieData = null;
 
+// 외부API
 const fetchData = async () => {
   try {
     const res = await fetch(
-      'https://api.themoviedb.org/3/movie/top_rated?language=en-US&page=1',
+      `https://api.themoviedb.org/3/movie/top_rated?language=en-US&page=${currentPage}`,
       options
     );
     if (!res.ok) {
@@ -25,12 +30,59 @@ const fetchData = async () => {
   }
 };
 
+// 페이지 로드 시 초기 데이터 로딩과 페이지네이션 설정
+window.addEventListener('load', async () => {
+  await loadPageData(currentPage); // 페이지 데이터 로드 및 렌더링
+  setupPaginationButtons(); // 페이지네이션 버튼 설정
+});
+const loadPageData = async (pageNumber) => {
+  const data = await fetchData(pageNumber);
+  if (data) {
+    total_pages = data.total_pages;
+    movieData = data;
+    renderMovieList(movieData.results);
+    updatePageNumbers();
+  }
+};
+// 페이지네이션 버튼 설정
+const setupPaginationButtons = () => {
+  document
+    .getElementById('firstPage')
+    .addEventListener('click', () => goToPage(1));
+  document
+    .getElementById('lastPage')
+    .addEventListener('click', () => goToPage(total_pages));
+  document
+    .getElementById('prev')
+    .addEventListener('click', () => goToPage(currentPage - 1));
+  document
+    .getElementById('next')
+    .addEventListener('click', () => goToPage(currentPage + 1));
+};
+const goToPage = async (pageNumber) => {
+  if (
+    pageNumber >= 1 &&
+    pageNumber <= total_pages &&
+    pageNumber !== currentPage
+  ) {
+    currentPage = pageNumber;
+    const data = await fetchData(currentPage);
+    if (data) {
+      movieData = data;
+      renderMovieList(movieData.results);
+      updatePageNumbers();
+    }
+  }
+};
+
+// 새롭게 영화들을 렌더링 하기 이전에 페이지 초기화
 const renderMovieList = (movies) => {
   const $movieList = document.querySelector('.movieList');
   $movieList.innerHTML = ''; // 이전 목록을 초기화
   makeMovieList(movies, $movieList);
 };
 
+//각 영화에 대한 HTML 요소를 생성
 const makeMovieList = (movies, $container) => {
   movies.forEach((movie) => {
     const $movie = document.createElement('div');
@@ -67,18 +119,6 @@ $searchMovie.addEventListener('submit', async (e) => {
   }
 });
 
-// 페이지 로드 시 최상위 평점 영화 목록 렌더링
-window.addEventListener('load', async () => {
-  try {
-    if (!movieData) {
-      // movieData가 없으면 API 호출
-      movieData = await fetchData();
-    }
-    renderMovieList(movieData.results);
-  } catch (error) {
-    console.error('에러:', error);
-  }
-});
 //모달열기
 const openModal = (message) => {
   document.getElementById('modalMessage').textContent = message;
@@ -101,3 +141,48 @@ window.addEventListener('click', (event) => {
     closeModal();
   }
 });
+
+// TOP 버튼 스크롤 이벤트
+window.addEventListener('scroll', () => {
+  const topButton = document.getElementById('topButton');
+  if (window.scrollY > 100) {
+    topButton.style.display = 'block';
+  } else {
+    topButton.style.display = 'none';
+  }
+});
+
+document.getElementById('topButton').addEventListener('click', () => {
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+});
+
+// 페이지네이션 번호를 업데이트하는 함수
+const updatePageNumbers = () => {
+  const pageNumberContainer = document.getElementById('pageNumberContainer');
+  pageNumberContainer.innerHTML = ''; // 기존 페이지네이션 버튼 삭제
+
+  // 시작 페이지 번호 계산 (현재 페이지를 중심으로, 최대 5개의 페이지 번호 표시)
+  let startPage = Math.max(currentPage - 2, 1);
+  let endPage = Math.min(startPage + 4, total_pages);
+
+  // 페이지 번호 버튼 생성
+  for (let pageNum = startPage; pageNum <= endPage; pageNum++) {
+    const pageButton = document.createElement('button');
+    pageButton.innerText = pageNum;
+    pageButton.className = 'pageButton';
+    if (currentPage === pageNum) {
+      pageButton.style.backgroundColor = '#555';
+    }
+    pageButton.onclick = async () => {
+      currentPage = pageNum;
+      const data = await fetchData(pageNum);
+      if (data) {
+        movieData = data;
+        renderMovieList(movieData.results);
+        updatePageNumbers();
+      }
+    };
+
+    pageNumberContainer.appendChild(pageButton);
+  }
+};

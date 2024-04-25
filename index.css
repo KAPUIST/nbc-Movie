@@ -135,3 +135,42 @@ h2 {
   text-decoration: none;
   cursor: pointer;
 }
+.pagination {
+  text-align: center;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.pagination button {
+  padding: 10px 15px;
+  margin: 0 5px; /* 버튼 사이 간격 조정 */
+  background-color: #333;
+  border: none;
+  color: #fff;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.pagination button:hover {
+  background-color: #555;
+}
+
+.pagination span button {
+  background-color: #e50914;
+}
+
+#topButton {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  padding: 10px 20px;
+  background-color: #e50914;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  display: none;
+}
+
+#topButton:hover {
+  background-color: #ff0a16;
+}
