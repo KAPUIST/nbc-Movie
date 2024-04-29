@@ -136,6 +136,25 @@ $searchMovie.addEventListener('submit', async (e) => {
     try {
       currentPage = 1;
       movieData = await searchData(searchedString);
+      total_pages = movieData.total_pages;
+      if (movieData.results.length > 0) {
+        renderMovieList(movieData.results);
+        total_pages = movieData.total_pages;
+        updatePageNumbers(); // 페이지네이션 업데이트
+      } else {
+        document.querySelector('.movieList').innerHTML =
+          '<p>검색 결과가 없습니다.</p>';
+        updatePageNumbers();
+      }
+    } catch (error) {
+      console.error('검색 에러:', error);
+    }
+  } else {
+    isSearching = false;
+    try {
+      currentPage = 1;
+      currentSearchQuery = '';
+      movieData = await fetchData();
       if (movieData.results.length > 0) {
         renderMovieList(movieData.results);
         total_pages = movieData.total_pages;
@@ -199,6 +218,9 @@ const updatePageNumbers = () => {
   // 페이지 번호 버튼 생성
   for (let pageNum = startPage; pageNum <= endPage; pageNum++) {
     const pageButton = document.createElement('button');
+    if (endPage === 1) {
+      pageButton.disabled = true;
+    }
     pageButton.innerText = pageNum;
     pageButton.className = 'pageButton';
     if (currentPage === pageNum) {
