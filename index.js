@@ -10,14 +10,34 @@ const options = {
 const moviesPerPage = 20;
 let currentPage = 1;
 let total_pages;
+//검색상태 변수
+let isSearching = false;
+let currentSearchQuery = '';
 // 영화 데이터 변수
 let movieData = null;
 
 // 외부API
 const fetchData = async () => {
   try {
+    const endpoint = isSearching
+      ? `https://api.themoviedb.org/3/search/movie?query=${currentSearchQuery}&include_adult=true&language=en-US&page=${currentPage}`
+      : `https://api.themoviedb.org/3/movie/top_rated?language=en-US&page=${currentPage}`;
+    const res = await fetch(endpoint, options);
+    if (!res.ok) {
+      throw new Error('에러발생!!');
+    }
+    return await res.json();
+  } catch (error) {
+    console.error('Fetch error:', error);
+    throw error;
+  }
+};
+const searchData = async (value) => {
+  isSearching = true;
+  currentSearchQuery = value;
+  try {
     const res = await fetch(
-      `https://api.themoviedb.org/3/movie/top_rated?language=en-US&page=${currentPage}`,
+      `https://api.themoviedb.org/3/search/movie?query=${currentSearchQuery}&include_adult=true&language=en-US&page=${currentPage}`,
       options
     );
     if (!res.ok) {
@@ -46,18 +66,22 @@ const loadPageData = async (pageNumber) => {
 };
 // 페이지네이션 버튼 설정
 const setupPaginationButtons = () => {
-  document
-    .getElementById('firstPage')
-    .addEventListener('click', () => goToPage(1));
-  document
-    .getElementById('lastPage')
-    .addEventListener('click', () => goToPage(total_pages));
-  document
-    .getElementById('prev')
-    .addEventListener('click', () => goToPage(currentPage - 1));
-  document
-    .getElementById('next')
-    .addEventListener('click', () => goToPage(currentPage + 1));
+  const firstPage = document.getElementById('firstPage');
+  firstPage.style.display = currentPage === 1 ? 'none' : 'block';
+
+  const prevPage = document.getElementById('prev');
+  prevPage.style.display = currentPage === 1 ? 'none' : 'block';
+
+  const lastPage = document.getElementById('lastPage');
+  lastPage.style.display = currentPage === total_pages ? 'none' : 'block';
+
+  const nextPage = document.getElementById('next');
+  nextPage.style.display = currentPage === total_pages ? 'none' : 'block';
+
+  firstPage.onclick = () => goToPage(1);
+  prevPage.onclick = () => goToPage(currentPage - 1);
+  nextPage.onclick = () => goToPage(currentPage + 1);
+  lastPage.onclick = () => goToPage(total_pages);
 };
 const goToPage = async (pageNumber) => {
   if (
@@ -66,11 +90,12 @@ const goToPage = async (pageNumber) => {
     pageNumber !== currentPage
   ) {
     currentPage = pageNumber;
-    const data = await fetchData(currentPage);
+    const data = await fetchData();
     if (data) {
       movieData = data;
       renderMovieList(movieData.results);
       updatePageNumbers();
+      setupPaginationButtons();
     }
   }
 };
@@ -105,17 +130,23 @@ const $searchMovie = document.querySelector('.searchMovie');
 $searchMovie.addEventListener('submit', async (e) => {
   e.preventDefault();
   const searchedString = e.target['search'].value.toUpperCase();
-  try {
-    if (!movieData) {
-      // movieData가 없으면 API 호출
-      movieData = await fetchData();
+
+  if (searchedString) {
+    // movieData가 없으면 API 호출
+    try {
+      currentPage = 1;
+      movieData = await searchData(searchedString);
+      if (movieData.results.length > 0) {
+        renderMovieList(movieData.results);
+        total_pages = movieData.total_pages;
+        updatePageNumbers(); // 페이지네이션 업데이트
+      } else {
+        document.querySelector('.movieList').innerHTML =
+          '<p>검색 결과가 없습니다.</p>';
+      }
+    } catch (error) {
+      console.error('검색 에러:', error);
     }
-    const searchedMovies = movieData.results.filter((movie) =>
-      movie.title.toUpperCase().includes(searchedString)
-    );
-    renderMovieList(searchedMovies);
-  } catch (error) {
-    console.error('검색 에러:', error);
   }
 });
 
@@ -171,11 +202,11 @@ const updatePageNumbers = () => {
     pageButton.innerText = pageNum;
     pageButton.className = 'pageButton';
     if (currentPage === pageNum) {
-      pageButton.style.backgroundColor = '#555';
+      pageButton.style.backgroundColor = '#e50914';
     }
     pageButton.onclick = async () => {
       currentPage = pageNum;
-      const data = await fetchData(pageNum);
+      const data = await fetchData();
       if (data) {
         movieData = data;
         renderMovieList(movieData.results);
@@ -185,4 +216,5 @@ const updatePageNumbers = () => {
 
     pageNumberContainer.appendChild(pageButton);
   }
+  setupPaginationButtons();
 };

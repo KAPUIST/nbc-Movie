@@ -139,6 +139,9 @@ h2 {
   text-align: center;
   margin-top: 20px;
   margin-bottom: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .pagination button {
@@ -152,11 +155,11 @@ h2 {
 }
 
 .pagination button:hover {
-  background-color: #555;
+  background-color: #e50914;
 }
 
 .pagination span button {
-  background-color: #e50914;
+  background-color: #555;
 }
 
 #topButton {
